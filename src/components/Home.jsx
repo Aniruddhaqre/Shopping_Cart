@@ -1,5 +1,6 @@
 import React from "react";
 import ProductCard from "./ProductCard ";
+import { toast } from "react-hot-toast";
 
 const Home = () => {
   const productList = [
@@ -19,6 +20,7 @@ const Home = () => {
 
   const addToCartHandler = (options) => {
     console.log(options)
+    toast.success("Added To Cart")
   }
 
   return (
