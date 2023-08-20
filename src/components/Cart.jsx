@@ -1,58 +1,66 @@
 import React from "react";
 import { AiFillDelete } from "react-icons/ai";
+import { useSelector ,useDispatch} from "react-redux";
+import { toast} from "react-hot-toast"
+
 
 const Cart = () => {
+
+  const dispatch = useDispatch()
+
+  const { cartItems } = useSelector((state) => state.cart);
+
+  const cart = useSelector((state) => state.cart);
+
+  const increment = (id) => {
+    dispatch({
+      type : "addToCart",
+      payload : {id}
+    })
+    dispatch({type : "calculatePrice"})
+  };
+  const decrement = (id) => {
+    dispatch({
+      type : "decrement",
+      payload : {id}
+    })
+    dispatch({type : "calculatePrice"})
+  };
+  const deleteHandler = (id) => {
+    dispatch({
+      type : "delete",
+      payload : {id}
+    })
+    dispatch({type : "calculatePrice"})
+    toast.error("Deleted sucessfully")
+  };
+
   return (
     <div className="cart">
       <main>
-        <CartItem 
-          imgSrc={"https://rukminim1.flixcart.com/image/850/1000/kruyw7k0/computer/v/x/v/na-thin-and-light-laptop-apple-original-imag5jt7u9fzenqb.jpeg?q=90"}
-          name={"Mac Book"}
-          price={23212}
-          qty={1}
-          id={"dsaodhsaodsdassa"}
-        />
-        <CartItem 
-          imgSrc={"https://rukminim1.flixcart.com/image/850/1000/kruyw7k0/computer/v/x/v/na-thin-and-light-laptop-apple-original-imag5jt7u9fzenqb.jpeg?q=90"}
-          name={"Mac Book"}
-          price={23212}
-          qty={1}
-          id={"dsaodhsaodsdassa"}
-        />
-        <CartItem 
-          imgSrc={"https://rukminim1.flixcart.com/image/850/1000/kruyw7k0/computer/v/x/v/na-thin-and-light-laptop-apple-original-imag5jt7u9fzenqb.jpeg?q=90"}
-          name={"Mac Book"}
-          price={23212}
-          qty={1}
-          id={"dsaodhsaodsdassa"}
-        />
-        <CartItem 
-          imgSrc={"https://rukminim1.flixcart.com/image/850/1000/kruyw7k0/computer/v/x/v/na-thin-and-light-laptop-apple-original-imag5jt7u9fzenqb.jpeg?q=90"}
-          name={"Mac Book"}
-          price={23212}
-          qty={1}
-          id={"dsaodhsaodsdassa"}
-        />
-        <CartItem 
-          imgSrc={"https://rukminim1.flixcart.com/image/850/1000/kruyw7k0/computer/v/x/v/na-thin-and-light-laptop-apple-original-imag5jt7u9fzenqb.jpeg?q=90"}
-          name={"Mac Book"}
-          price={23212}
-          qty={1}
-          id={"dsaodhsaodsdassa"}
-        />
-        <CartItem 
-          imgSrc={"https://rukminim1.flixcart.com/image/850/1000/kruyw7k0/computer/v/x/v/na-thin-and-light-laptop-apple-original-imag5jt7u9fzenqb.jpeg?q=90"}
-          name={"Mac Book"}
-          price={23212}
-          qty={1}
-          id={"dsaodhsaodsdassa"}
-        />
+        {cartItems.length > 0 ? (
+          cartItems.map((i) => (
+            <CartItem
+              key={i.id}
+              imgSrc={i.imgSrc}
+              name={i.name}
+              price={i.price}
+              qty={i.quantity}
+              id={i.id}
+              increment={increment}
+              decrement={decrement}
+              deleteHandler={deleteHandler}
+            />
+          ))
+        ) : (
+          <h1>NO ITEMS YET</h1>
+        )}
       </main>
       <aside>
-        <h2>Subtotal : ${2000}</h2>
-        <h2>Shipping : ${200}</h2>
-        <h2>Tax : ${20}</h2>
-        <h2>Total: ${1220}</h2>
+        <h2>Subtotal : ${cart.subTotal}</h2>
+        <h2>Shipping : ${cart.shipping}</h2>
+        <h2>Tax : ${cart.tax}</h2>
+        <h2>Total: ${cart.total}</h2>
       </aside>
     </div>
   );
